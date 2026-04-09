@@ -1,2 +1,0 @@
-# AddonName
-Addon Description
