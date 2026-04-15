@@ -1,15 +1,15 @@
-# RCLootCouncil_StatPriority
+# RCLootCouncil_Extended
 ![RCLootCouncil Preview](https://media.forgecdn.net/attachments/1623/346/bildschirmfoto_20260409_175032-png.png)
 
-This is a standalone companion addon for `RCLootCouncil` that adds a new column in the voting frame to display stat priorities of each player.
+This is a standalone companion addon for `RCLootCouncil` that adds more information to the voting frame.
 
 ## What It Does
 
-- Adds a `Stat Priority` column to the RCLootCouncil voting table.
-- Shows a single compact row value such as `Arms: C > H > M >= V`.
+- Adds new columns to the RCLootCouncil voting frame.
+  - Spec based stat priorities
+  - Spec based trinket rankings
 - Uses the candidate's current spec first if available.
-- Falls back to a default order when the spec is unknown.
-- Shows the full class spec list in a tooltip, with the displayed spec first.
+- Shows the full list for all specs in a tooltip
 
 ## AI Disclaimer
 
@@ -20,14 +20,14 @@ This is a standalone companion addon for `RCLootCouncil` that adds a new column 
 
 This addon requires RCLootCouncil. It does nothing on its own.
 
-## Where To Edit Stat Priorities
-Edit the hardcoded table in:
-
+## Where To Edit The Data
+You can edit all priorities and rankings in the following files:
 - `Data/StatPriorities.lua`
+- `Data/TrinketRanking.lua`
 
 The data structure for each class in StatPriorities.lua looks like this:
 ```lua
-DEATHKNIGHT = {
+["Death Knight"] = {
         fallback_order = {"Blood", "Frost", "Unholy"},
         specs = {
             Blood = "H >= C >= M = V",
@@ -36,12 +36,32 @@ DEATHKNIGHT = {
         },
     },
 ```
-- Each entry starts with the class name. Beast Mastery needs to be in the format `["Beast Mastery"]` for lua to detect it as a single entry. It will fail otherwise.
-- fallback_order is used in case that the addon cannot detect the current spec of a player. It is more or less the order of specs on wowhead
+The data structure in TrinketRanking.lua looks like this:
+```lua
+   ["Death Knight"] = {
+        fallback_order = {"Blood", "Frost", "Unholy"},
+        specs = {
+            ["Blood"] = {
+                { itemID = 249343, name = "Gaze of the Alnseer", Rank = "S" },
+                { itemID = 249344, name = "Light Company Guidon", Rank = "S" },
+            },
+            ["Frost"] = {
+                { itemID = 249344, name = "Light Company Guidon", Rank = "S"  },
+                { itemID = 249343, name = "Gaze of the Alnseer", Rank = "S"  },
+            },
+            ["Unholy"] = {
+                { itemID = 249344, name = "Light Company Guidon", Rank = "S"  },
+                { itemID = 249343, name = "Gaze of the Alnseer",  Rank = "S"  },
+            },
+        },
+    },
+```
+
+- Class- and specnames with spaces need to be in the format `["Beast Mastery"]` for lua to detect it as a single entry. It will fail otherwise.
+- fallback_order is used in case that the addon cannot detect the current spec of a player. It is more or less the order of specs on Wowhead.
 
 ## Known Limitations
 
-- Stat priorities are static hardcoded values for now
 - No sorting for the custom column.
 - No configuration UI.
-- Spec names assume English spec keys in the hardcoded data.
+- Spec names assume English spec keys.
